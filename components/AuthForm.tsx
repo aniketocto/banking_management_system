@@ -8,16 +8,7 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { Button } from "@/components/ui/button";
-import {
-  Form,
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
+import { Form } from "@/components/ui/form";
 import CustomField from "./Customfields";
 import { authFormSchema } from "@/lib/utils";
 import { Loader2 } from "lucide-react";
@@ -27,11 +18,20 @@ const AuthForm = ({ type }: { type: string }) => {
   const [isLoading, setIsLoading] = useState(false);
 
   const formSchema = authFormSchema(type);
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       email: "",
       password: "",
+      firstName: "",
+      lastName: "",
+      address1: "",
+      city: "",
+      state: "",
+      postalCode: "",
+      dateOfBirth: "",
+      ssn: "",
     },
   });
 
@@ -67,33 +67,137 @@ const AuthForm = ({ type }: { type: string }) => {
         <>
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+              {type === "sign-up" && (
+                <>
+                  <div className="flex gap-5">
+                    <CustomField
+                      control={form.control}
+                      name="firstName"
+                      label="First Name"
+                      type="text"
+                      placeholder="Enter your First Name"
+                      id="name"
+                      autoComplete=""
+                    />
+                    <CustomField
+                      control={form.control}
+                      name="lastName"
+                      label="Last Name"
+                      type="text"
+                      placeholder="Enter your Last Name"
+                      id="name"
+                      autoComplete=""
+                    />
+                  </div>
+                  <CustomField
+                    control={form.control}
+                    name="address1"
+                    label="Address 1"
+                    type="text"
+                    placeholder="Enter your specific address"
+                    id="name"
+                    autoComplete=""
+                  />
+                  <CustomField
+                    control={form.control}
+                    name="address2"
+                    label="Address 2"
+                    type="text"
+                    placeholder="Enter your specific address"
+                    id="name"
+                    autoComplete=""
+                  />
+                  <div className="flex gap-5">
+                    <CustomField
+                      control={form.control}
+                      name="state"
+                      label="State"
+                      type="text"
+                      placeholder="ex: Maharashtra"
+                      id="name"
+                      autoComplete=""
+                    />
+                    <CustomField
+                      control={form.control}
+                      name="postalCode"
+                      label="Postal"
+                      type="number"
+                      placeholder="ex: 201409"
+                      id="name"
+                      autoComplete=""
+                    />
+                  </div>
+                  <div className="flex gap-20">
+                    <CustomField
+                      control={form.control}
+                      name="dateOfBirth"
+                      label="Date Of Birth"
+                      type="date"
+                      placeholder=""
+                      id="name"
+                      autoComplete=""
+                    />
+                    <CustomField
+                      control={form.control}
+                      name="ssn"
+                      label="SSN"
+                      type="number"
+                      placeholder="ex: 223"
+                      id="name"
+                      autoComplete=""
+                    />
+                  </div>
+                </>
+              )}
               <CustomField
                 control={form.control}
                 name="email"
                 label="Email"
+                type="email"
                 placeholder="Enter your email"
+                id="name"
+                autoComplete=""
               />
               <CustomField
                 control={form.control}
                 name="password"
                 label="Password"
+                type="password"
                 placeholder="Enter your password"
+                id="name"
+                autoComplete="current-password"
               />
 
-              <Button type="submit" className="form-btn" disabled={isLoading}>
-                {isLoading ? (
-                  <>
-                    <Loader2 size={20} className="animate-spin" />
-                    &nbsp; Loading...
-                  </>
-                ) : type === "sign-in" ? (
-                  "Sign In"
-                ) : (
-                  "Sign Up"
-                )}
-              </Button>
+              <div className="flex flex-col gap-4">
+                <Button type="submit" className="form-btn" disabled={isLoading}>
+                  {isLoading ? (
+                    <>
+                      <Loader2 size={20} className="animate-spin" />
+                      &nbsp; Loading...
+                    </>
+                  ) : type === "sign-in" ? (
+                    "Sign In"
+                  ) : (
+                    "Sign Up"
+                  )}
+                </Button>
+              </div>
             </form>
           </Form>
+
+          <footer className="flex justify-center gap-1">
+            <p className="text-14 font-normal text-gray-600">
+              {type === "sign-in"
+                ? "Don't have an account?"
+                : "Already have an account?"}
+            </p>
+            <Link
+              href={type === "sign-in" ? "/sign-up" : "/sign-in"}
+              className="form-link"
+            >
+              {type === "sign-in" ? "Sign In" : "Sign Up"}
+            </Link>
+          </footer>
         </>
       )}
     </section>

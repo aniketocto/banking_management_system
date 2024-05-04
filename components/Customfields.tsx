@@ -13,9 +13,12 @@ interface CustomInput {
   name: FieldPath<z.infer<typeof formSchema>>,
   label: string,
   placeholder: string
+  type: string
+  id: string
+  autoComplete: string
 }
 
-const CustomInput = ({ control, name, label, placeholder }: CustomInput) => {
+const CustomInput = ({ control, name, label, placeholder, type, autoComplete }: CustomInput) => {
   return (
     <FormField
       control={control}
@@ -30,7 +33,9 @@ const CustomInput = ({ control, name, label, placeholder }: CustomInput) => {
               <Input 
                 placeholder={placeholder}
                 className="input-class"
-                type={name === 'password' ? 'password' : 'text'}
+                type={type}
+                id={name}
+                autoComplete={autoComplete}
                 {...field}
               />
             </FormControl>
