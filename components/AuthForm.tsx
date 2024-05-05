@@ -12,7 +12,7 @@ import { Form } from "@/components/ui/form";
 import CustomField from "./Customfields";
 import { authFormSchema } from "@/lib/utils";
 import { Loader2 } from "lucide-react";
-import { useRouter } from "next/navigation";
+import { redirect, useRouter } from "next/navigation";
 import { getLoggedInUser, signIn, signUp } from "@/lib/actions/user.actions";
 
 const AuthForm = ({ type }: { type: string }) => {
@@ -47,15 +47,17 @@ const AuthForm = ({ type }: { type: string }) => {
 
       if (type === "sign-up") {
         const newUser = await signUp(data);
+
         setUser(newUser);
       }
 
       if (type === "sign-in") {
-        // const res = await signIn({
-        //   email: data.email,
-        //   password: data.password,
-        // });
-        // if (res) router.push('/')
+        const response = await signIn({
+          email: data.email,
+          password: data.password,
+        });
+
+        if (response) router.push("/");
       }
     } catch (error) {
       console.log(error);
@@ -67,12 +69,12 @@ const AuthForm = ({ type }: { type: string }) => {
   return (
     <section className="auth-form">
       <header className="flex flex-col gap-5 md:gap-8">
-        <Link href="/" className="flex cursor-pointer items-center gap-1">
+        <div className="flex cursor-pointer items-center gap-1">
           <Image src="/icons/logo.svg" width={34} height={34} alt="Horizon" />
           <h1 className="text-26 font-ibm-plex-serif font-bold text-black-1">
             Horizon
           </h1>
-        </Link>
+        </div>
         <div className="flex flex-col gap-1 md:gap-3">
           <h1 className=" text-24 lg:text-36 font-semibold text-gray-900">
             {user ? "Link Account" : type === "sign-in" ? "Sign In" : "Sign Up"}
@@ -226,7 +228,7 @@ const AuthForm = ({ type }: { type: string }) => {
               href={type === "sign-in" ? "/sign-up" : "/sign-in"}
               className="form-link"
             >
-              {type === "sign-in" ? "Sign In" : "Sign Up"}
+              {type === "sign-in" ? "Sign Up" : "Sign in"}
             </Link>
           </footer>
         </>
